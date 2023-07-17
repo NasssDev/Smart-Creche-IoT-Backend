@@ -19,7 +19,7 @@ class App {
    private mountRoutes(): void {
       routes.init(this.app);
       this.app.get('/', (req, res) => {
-         res.send('Hello, Welcome to xFeat Application');
+         res.send('Hello, Welcome to IOT Application');
       });
    }
 }

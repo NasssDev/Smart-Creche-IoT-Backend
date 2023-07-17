@@ -7,7 +7,7 @@ config({ path: resolve(`${BASE_PATH}/../.env`) });
 import app from './app';
 import mongoose from 'mongoose';
 import { connection } from './utils/dbConnection';
-import { logger } from './utils/logger.ts';
+import { logger } from './utils/logger';
 
 const port = process.env.PORT || 3000;
 

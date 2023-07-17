@@ -1,5 +1,6 @@
-class AccountController {
+import validator from './user.validator';
+import { userController } from './user.controller';
+
+export default (app) => {
 
 }
-
-export const accountController = new AccountController();
