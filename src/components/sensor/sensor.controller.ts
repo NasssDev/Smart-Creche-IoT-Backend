@@ -1,12 +1,9 @@
 import client from "../../utils/mqtt";
 
-class SensorController {
+export default class SensorController {
 
-
-  private static client: SensorController;
-
-  static getData() {
-    const topic = "<group>/packet/<gateway_id>/<node_id>/<sensor_id>";
+    static getData(): void {
+    const topic = "groupe8/packet/63c09edc-771b-4e15-ab00-237bb926b040/0519adec-dcf7-40f2-a73d-3ca7cb3a3dcd/118";
     SensorController.getconnection(topic);
   }
 
@@ -42,6 +39,6 @@ class SensorController {
 }
 
 
-}
+
 
 export const sensorController = new SensorController();
