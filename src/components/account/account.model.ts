@@ -21,7 +21,8 @@ export interface Address extends mongoose.Document {
          },
          type: {
              type: String,
-             required: true
+             required: true,
+             default: 'collective'
          },
          postalCode: {
              type: Number,
