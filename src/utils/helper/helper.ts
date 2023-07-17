@@ -133,8 +133,8 @@ export class Helper {
     * @return {*|Sequelize.json|Promise<any>}
     */
    static async createValidationResponse(res: Response, errors: any) {
-      return Helper.createResponse(res, HttpStatus.UNPROCESSABLE_ENTITY, res['__'](errors[Object.keys(errors)[0]]), {
-         error: res['__'](errors[Object.keys(errors)[0]])
+      return Helper.createResponse(res, HttpStatus.UNPROCESSABLE_ENTITY,  (errors[Object.keys(errors)[0]]), {
+         error:  (errors[Object.keys(errors)[0]])
       });
    }
 

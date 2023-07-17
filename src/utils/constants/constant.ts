@@ -9,5 +9,9 @@ export class Constants {
 
     public static TOKEN_SECRET = {
         KEY: 'jwt_secret'
-     };
+    };
+
+    public static PASSWORD = {
+        SALT_ROUND: 10
+    };
 }

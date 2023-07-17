@@ -49,7 +49,6 @@ export interface Account extends mongoose.Document {
    phone: number;
    createdAt: Date;
    updatedAt: Date;
-   createdBy: mongoose.Schema.Types.ObjectId;
    updatedBy: mongoose.Schema.Types.ObjectId;
 }
 
@@ -83,10 +82,6 @@ const AccountSchema = new Schema(
         updatedAt: {
             type: Date,
             required: true
-        },
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
         },
         updatedBy: {
             type: mongoose.Schema.Types.ObjectId,
