@@ -10,6 +10,9 @@ export interface Sensor extends mongoose.Document {
 
 const SensorSchema = new Schema(
    {
+        sensorId: {
+            type: Number
+        },
         name: {
             type: String,
             required: true
