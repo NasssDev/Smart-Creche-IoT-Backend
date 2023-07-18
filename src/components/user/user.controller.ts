@@ -105,14 +105,17 @@ class UserController {
                userId: user._id,
                accountId: account._id
             });
-            const tokenData = Common.createToken({ user, userRole, session: session });              
-            Helper.createResponse(res, HttpStatus.OK, res['__']('SIGNIN_SUCCESS'), {
+            const tokenData = Common.createToken({ user, userRole, session: session });    
+            res.setHeader('Set-Cookie', [Helper.createCookie(tokenData)]);          
+            Helper.createResponse(res, HttpStatus.OK, 'SIGNIN_SUCCESS', {
                user,
                token: tokenData?.token,
                account
             });
             return 
          }
+         Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'EMAIL_AND_PASSWORD_DOESENT_MATCH', {});
+         return;
       } catch (error) {
          logger.error(__filename, {
             method: 'signin',
