@@ -7,7 +7,7 @@
   "repository": "https://github.com/Hetic-Team/iot-backend-v1.git",
   "license": "ISC",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && netlify deploy --prod",
     "dev": "npm run build && npm start",
     "start": "node dist/server.js",
     "watch-node": "nodemon dist/server.js",
@@ -34,6 +34,9 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.4",
     "mqtt": "^4.3.7",
+    "netlify": "^13.1.10",
+    "netlify-cli": "^15.9.0",
+    "netlify-lambda": "^2.0.16",
     "save": "^2.9.0",
     "typescript": "^4.9.4",
     "uuid": "^9.0.0",
