@@ -18,7 +18,8 @@ export interface SensorEvent extends mongoose.Document {
              type: Number,
              required: true
          }
-     }
+     },
+     { _id: false }
  );
 
 export interface Event extends mongoose.Document {

@@ -8,6 +8,7 @@ import { AccountRecord } from "../account/account.model";
 import * as bcrypt from 'bcrypt';
 import { Constants } from "../../utils/constants";
 import { UserRoleRecord } from "../userRole/userRole.model";
+import { Common } from "../common";
 
 
 
@@ -33,9 +34,7 @@ class UserController {
             lastName,
             firstName,
             email,
-            password: encryptedPassword,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            password: encryptedPassword
          });
          await user.save();
 
@@ -55,8 +54,7 @@ class UserController {
             address: _address || null,
             email: user?._id,
             phone: null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            updatedBy: user?._id
          });
          await account.save();
 
@@ -65,7 +63,6 @@ class UserController {
             userId: user?._id,
             accountId: account?._id,
             roleId: process.env.MANAGER_ROLE_ID,
-            updatedAt: new Date()
          });
          await userRole.save();
             
@@ -96,8 +93,15 @@ class UserController {
    public async signin(req: Request, res: Response) {
       const { email, password, user } = req.body;
       try {   
-       
-           
+         const isPwdMatching = await bcrypt.compare(password, user.password);
+         if (isPwdMatching) {
+            return Helper.createResponse(res, HttpStatus.OK, res['__']('SIGNIN_SUCCESS'), {
+               user: {
+                  resetPassword: user.resetPassword
+               },
+               token: Common.createSetPasswordToken({ data: { user: { _id: user._id } } }).token
+            });
+         }
          Helper.createResponse(res, HttpStatus.OK, 'SIGNIN_SUCCESS', {  });
          return;
       } catch (error) {

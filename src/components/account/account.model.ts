@@ -36,7 +36,8 @@ export interface Address extends mongoose.Document {
              type: mongoose.Schema.Types.ObjectId,
              ref: 'Coutry'
          }
-     }
+     },
+     { _id: false }
  );
 
 export interface Account extends mongoose.Document {

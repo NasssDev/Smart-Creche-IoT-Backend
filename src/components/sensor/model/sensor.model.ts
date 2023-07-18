@@ -6,8 +6,6 @@ export interface Sensor extends mongoose.Document {
    _id: mongoose.Schema.Types.ObjectId;
    name: string;
    unit: string;
-   isActive: Boolean;
-   location: string;
 }
 
 const SensorSchema = new Schema(
@@ -19,14 +17,6 @@ const SensorSchema = new Schema(
         unit: {
             type: String,
             required: true
-        },
-        isActive: {
-            type: Boolean,
-            required: true,
-            default: true
-        },
-        location: {
-            type: String,
         }
     },
     { timestamps: true }

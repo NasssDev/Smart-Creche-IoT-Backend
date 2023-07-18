@@ -23,7 +23,7 @@ class UserValidator {
         errors['siret'] = 'SIRET_NOT_FOUND'
     }
     try {  
-        const isExist = await AccountRecord.findOne({siret}).lean()  
+        const isExist = await AccountRecord.findOne({siret, isDeleted: false}).lean()  
         if(!isEmpty(isExist)){
             errors['siret'] = 'SIRET_ALREADY_EXIST';
         }  
@@ -58,6 +58,10 @@ class UserValidator {
     req.body.lastName = lastName.toLowerCase()
 
     //check email
+    const _isExist = await UserRecord.findOne({email, isDeleted: false}).lean()  
+    if(!isEmpty(_isExist)){
+        errors['siret'] = 'SIRET_ALREADY_EXIST';
+    }  
     if(isEmpty(email)){
         errors['email'] = 'EMAIL_NOT_FOUND'
     }else if (!isEmail(email)) {

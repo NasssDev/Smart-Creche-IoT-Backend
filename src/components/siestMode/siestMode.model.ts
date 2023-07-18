@@ -15,7 +15,8 @@ export interface WorkHours extends mongoose.Document {
          end: {
              type: Number
          }
-     }
+     },
+     { _id: false }
  );
 
 export interface SiestMode extends mongoose.Document {
