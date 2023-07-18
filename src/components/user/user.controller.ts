@@ -96,9 +96,6 @@ class UserController {
          const isPwdMatching = await bcrypt.compare(password, user.password);
          if (isPwdMatching) {
             return Helper.createResponse(res, HttpStatus.OK, res['__']('SIGNIN_SUCCESS'), {
-               user: {
-                  resetPassword: user.resetPassword
-               },
                token: Common.createSetPasswordToken({ data: { user: { _id: user._id } } }).token
             });
          }
