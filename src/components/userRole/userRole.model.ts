@@ -79,7 +79,11 @@ const UserRoleSchema = new Schema(
         },
         notifications: {
             type: NotificationSchema,
-        }
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
+         },
     },
     { timestamps: true }
 );

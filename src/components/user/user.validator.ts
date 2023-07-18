@@ -60,7 +60,7 @@ class UserValidator {
     //check email
     const _isExist = await UserRecord.findOne({email, isDeleted: false}).lean()  
     if(!isEmpty(_isExist)){
-        errors['siret'] = 'SIRET_ALREADY_EXIST';
+        errors['email'] = 'EMAIL_ALREADY_EXIST';
     }  
     if(isEmpty(email)){
         errors['email'] = 'EMAIL_NOT_FOUND'
