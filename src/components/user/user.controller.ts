@@ -9,6 +9,8 @@ import * as bcrypt from 'bcrypt';
 import { Constants } from "../../utils/constants";
 import { UserRoleRecord } from "../userRole/userRole.model";
 import { Common } from "../common";
+import userHelper from "./user.helper";
+import { SessionRecord } from "../session/session.model";
 
 
 
@@ -52,7 +54,7 @@ class UserController {
             siret: siret?.etablissement?.siret,
             type: siret?.etablissement?.uniteLegale?.activitePrincipaleUniteLegale === '88.91A' ? '88.91A - Accueil de jeunes enfants' : null,
             address: _address || null,
-            email: user?._id,
+            email: null,
             phone: null,
             updatedBy: user?._id
          });
@@ -63,6 +65,7 @@ class UserController {
             userId: user?._id,
             accountId: account?._id,
             roleId: process.env.MANAGER_ROLE_ID,
+            defaultLoginAccount: true
          });
          await userRole.save();
             
@@ -91,16 +94,25 @@ class UserController {
     * @returns {object} 500 - Internal server error
     */
    public async signin(req: Request, res: Response) {
-      const { email, password, user } = req.body;
+      const { password, user } = req.body;
       try {   
-         const isPwdMatching = await bcrypt.compare(password, user.password);
-         if (isPwdMatching) {
-            return Helper.createResponse(res, HttpStatus.OK, res['__']('SIGNIN_SUCCESS'), {
-               token: Common.createSetPasswordToken({ data: { user: { _id: user._id } } }).token
+         const userRole = await UserRoleRecord.findOne({userId: user._id, defaultLoginAccount: true, isDeleted: false}).lean()
+         const account = await AccountRecord.findOne({_id: userRole.accountId, isDeleted: false}).lean()
+         const isPwdMatching = await bcrypt.compare(password, user.password);           
+              
+         if (isPwdMatching) {  
+           const session = await SessionRecord.create({
+               userId: user._id,
+               accountId: account._id
             });
+            const tokenData = Common.createToken({ user, userRole, session: session });              
+            Helper.createResponse(res, HttpStatus.OK, res['__']('SIGNIN_SUCCESS'), {
+               user,
+               token: tokenData?.token,
+               account
+            });
+            return 
          }
-         Helper.createResponse(res, HttpStatus.OK, 'SIGNIN_SUCCESS', {  });
-         return;
       } catch (error) {
          logger.error(__filename, {
             method: 'signin',
