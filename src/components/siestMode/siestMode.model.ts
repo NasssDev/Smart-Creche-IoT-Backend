@@ -15,7 +15,8 @@ export interface WorkHours extends mongoose.Document {
          end: {
              type: Number
          }
-     }
+     },
+     { _id: false }
  );
 
 export interface SiestMode extends mongoose.Document {
@@ -24,7 +25,6 @@ export interface SiestMode extends mongoose.Document {
    isManual: Boolean;
    isActive: Boolean;
    workHours: WorkHours;
-   updatedAt: Date;
    updatedBy: mongoose.Schema.Types.ObjectId;
    sensorList: [mongoose.Schema.Types.ObjectId]
 }
@@ -45,16 +45,14 @@ const SiestModeSchema = new Schema(
         workHours: {
             type: WorkHoursSchema
         },
-        updatedAt: {
-            type: Date
-        },
         updatedBy: {
             type: mongoose.Schema.Types.ObjectId
         },
         sensorList: {
             type: [mongoose.Schema.Types.ObjectId]
         }
-    }
+    },
+    { timestamps: true }
 );
 
 export const SiestModeRecord = mongoose.model<SiestMode>('SiestMode', SiestModeSchema);

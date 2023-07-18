@@ -18,7 +18,8 @@ export interface SensorEvent extends mongoose.Document {
              type: Number,
              required: true
          }
-     }
+     },
+     { _id: false }
  );
 
 export interface Event extends mongoose.Document {
@@ -55,7 +56,8 @@ const EventSchema = new Schema(
             type: Boolean,
             required: true
         }
-    }
+    },
+    { timestamps: true }
 );
 
 export const EventRecord = mongoose.model<Event>('Event', EventSchema);
