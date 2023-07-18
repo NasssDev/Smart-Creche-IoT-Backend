@@ -24,64 +24,93 @@ class UserController {
     * @returns {object} 500 - Internal server error
     */
    public async signup(req: Request, res: Response) {
-    const { email, firstName, lastName, positionHeld, siret, password } = req.body;
-    try {   
+      const { email, firstName, lastName, positionHeld, siret, password } = req.body;
+      try {   
 
-      // configure user
-      const encryptedPassword = await bcrypt.hash(password, Constants.PASSWORD.SALT_ROUND);
-      const user = new UserRecord({
-         lastName,
-         firstName,
-         email,
-         password: encryptedPassword,
-         createdAt: new Date(),
-         updatedAt: new Date()
-      });
-      await user.save();
+         // configure user
+         const encryptedPassword = await bcrypt.hash(password, Constants.PASSWORD.SALT_ROUND);
+         const user = new UserRecord({
+            lastName,
+            firstName,
+            email,
+            password: encryptedPassword,
+            createdAt: new Date(),
+            updatedAt: new Date()
+         });
+         await user.save();
 
-      // configure account
-      const _address = {
-         address: siret?.etablissement?.adresseEtablissement?.numeroVoieEtablissement + ' ' + siret?.etablissement?.adresseEtablissement?.typeVoieEtablissement + ' ' + siret?.etablissement?.adresseEtablissement?.libelleVoieEtablissement,
-         optional: siret?.etablissement?.adresseEtablissement?.complementAdresseEtablissement,
-         postalCode: siret?.etablissement?.adresseEtablissement?.codePostalEtablissement,
-         city: siret?.etablissement?.adresseEtablissement?.libelleCommuneEtablissement,
-         coutryId: '64b51f9dd896af49cde3843e'
+         // configure account
+         const _address = {
+            address: siret?.etablissement?.adresseEtablissement?.numeroVoieEtablissement + ' ' + siret?.etablissement?.adresseEtablissement?.typeVoieEtablissement + ' ' + siret?.etablissement?.adresseEtablissement?.libelleVoieEtablissement,
+            optional: siret?.etablissement?.adresseEtablissement?.complementAdresseEtablissement,
+            postalCode: siret?.etablissement?.adresseEtablissement?.codePostalEtablissement,
+            city: siret?.etablissement?.adresseEtablissement?.libelleCommuneEtablissement,
+            coutryId: process.env.COUNTRY_ID
+         }
+
+         const account = new AccountRecord({
+            name: siret?.etablissement?.uniteLegale?.denominationUniteLegale,
+            siret: siret?.etablissement?.siret,
+            type: siret?.etablissement?.uniteLegale?.activitePrincipaleUniteLegale === '88.91A' ? '88.91A - Accueil de jeunes enfants' : null,
+            address: _address || null,
+            email: user?._id,
+            phone: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+         });
+         await account.save();
+
+         // configure userRole
+         const userRole = new UserRoleRecord({
+            userId: user?._id,
+            accountId: account?._id,
+            roleId: process.env.MANAGER_ROLE_ID,
+            updatedAt: new Date()
+         });
+         await userRole.save();
+            
+         Helper.createResponse(res, HttpStatus.OK, 'SIGNUP_SUCCESS', { account, user, userRole });
+         return;
+      } catch (error) {
+         logger.error(__filename, {
+            method: 'signup',
+            requestId: req['uuid'],
+            custom_message: 'Error while finalize signup',
+            error
+         });
+         Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'SIGNUP_ERROR', {});
+         return;
       }
+   }
 
-      const account = new AccountRecord({
-         name: siret?.etablissement?.uniteLegale?.denominationUniteLegale,
-         siret: siret?.etablissement?.siret,
-         type: siret?.etablissement?.uniteLegale?.activitePrincipaleUniteLegale === '88.91A' ? '88.91A - Accueil de jeunes enfants' : null,
-         address: _address || null,
-         email: user?._id,
-         phone: null,
-         createdAt: new Date(),
-         updatedAt: new Date(),
-      });
-      await account.save();
-
-      // configure userRole
-      const userRole = new UserRoleRecord({
-         userId: user?._id,
-         accountId: account?._id,
-         roleId: '64b5562ed896af49cde3843f',
-         updatedAt: new Date()
-      });
-      await userRole.save();
-         
-      Helper.createResponse(res, HttpStatus.OK, 'SIGNUP_SUCCESS', { account, user, userRole });
-      return;
-    } catch (error) {
-       logger.error(__filename, {
-          method: 'signup',
-          requestId: req['uuid'],
-          custom_message: 'Error while finalize signup',
-          error
-       });
-       Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'SIGNUP_ERROR', {});
-       return;
-    }
- }
+   /**
+    * @typedef signin
+    */
+   /**
+    * API to  reate an account
+    * @route post /api/signin
+    * @group IOT - API for iot
+    * @returns {object} 200 - Ok
+    * @returns {object} 500 - Internal server error
+    */
+   public async signin(req: Request, res: Response) {
+      const { email, password, user } = req.body;
+      try {   
+       
+           
+         Helper.createResponse(res, HttpStatus.OK, 'SIGNIN_SUCCESS', {  });
+         return;
+      } catch (error) {
+         logger.error(__filename, {
+            method: 'signin',
+            requestId: req['uuid'],
+            custom_message: 'Error while finalize signin',
+            error
+         });
+         Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'SIGNIN_ERROR', {});
+         return;
+      }
+   }
 
 }
 

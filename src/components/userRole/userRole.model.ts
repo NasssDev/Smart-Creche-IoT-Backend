@@ -53,7 +53,6 @@ export interface UserRole extends mongoose.Document {
    roleId: mongoose.Schema.Types.ObjectId;
    isActive: boolean;
    notifications: Notification;
-   updatedAt: Date;
 }
 
 const UserRoleSchema = new Schema(
@@ -80,12 +79,9 @@ const UserRoleSchema = new Schema(
         },
         notifications: {
             type: NotificationSchema,
-        },
-        updatedAt: {
-            type: Date,
-            required: true
         }
-    }
+    },
+    { timestamps: true }
 );
 
 export const UserRoleRecord = mongoose.model<UserRole>('UserRole', UserRoleSchema);

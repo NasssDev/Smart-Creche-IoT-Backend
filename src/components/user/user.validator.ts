@@ -3,19 +3,17 @@ import axios from "axios";
 import { isEmail, isEmpty, validatePassword } from '../../utils/validator';
 import { Helper } from '../../utils/helper';
 import { AccountRecord } from '../account/account.model';
+import { UserRecord } from './user.model';
 
 class UserValidator {
-/**
-    * @typedef signup
+    /**
+    * signup request payload validation
+    *
+    * @param req - The request object
+    * @param res - The response object
+    * @param next - The next middleware function
     */
-   /**
-    * API to  reate an account
-    * @route post /api/signup
-    * @group IOT - API for iot
-    * @returns {object} 200 - Ok
-    * @returns {object} 500 - Internal server error
-    */
-   public async signupValidator(req: Request, res: Response, next: NextFunction) {
+    public async signupValidator(req: Request, res: Response, next: NextFunction) {
     const { email, firstName, lastName, positionHeld, siret, password } = req.body;
 
     const errors = {}
@@ -49,20 +47,23 @@ class UserValidator {
 
     //check firstName
     if(isEmpty(firstName)){
-        errors['fisrtName'] = 'FISRTNAME_NOT_FOUND'
+        errors['firstName'] = 'FIRsTNAME_NOT_FOUND'
     }
+    req.body.firstName = firstName.toLowerCase()
 
     //check lastName
     if(isEmpty(lastName)){
         errors['lastName'] = 'LASTNAME_NOT_FOUND'
     }
+    req.body.lastName = lastName.toLowerCase()
 
     //check email
     if(isEmpty(email)){
         errors['email'] = 'EMAIL_NOT_FOUND'
     }else if (!isEmail(email)) {
         errors['email'] = 'INVALID_EMAIL';
-     }
+    }
+    req.body.email = email.toLowerCase()
 
     //check position held
     if(isEmpty(positionHeld)){
@@ -74,9 +75,49 @@ class UserValidator {
         errors['password'] = 'PASSWORD_NOT_FOUND'
     }else if (!validatePassword(password)) {
         errors['password'] = 'INVALID_PASSWORD';
-     }
+    }
 
     Helper.returnErrorOrPassToNext(res, next, errors);
  }
+
+   /**
+    * signin request payload validation
+    *
+    * @param req - The request object
+    * @param res - The response object
+    * @param next - The next middleware function
+    */
+    public async signinValidator(req: Request, res: Response, next: NextFunction) {
+        const { email, password } = req.body;
+
+        const errors = {}
+
+        //check email
+        if(isEmpty(email)){
+            errors['email'] = 'EMAIL_NOT_FOUND'
+        }else if (!isEmail(email)) {
+            errors['email'] = 'INVALID_EMAIL';
+        }
+        req.body.email = email.toLowerCase()
+
+        try{
+            const user : any = await UserRecord.findOne({ email, isDeleted: false }).lean();
+            if (isEmpty(user)){
+                errors['email'] = 'EMAIL_AND_PASSWORD_DOESENT_MATCH';
+            }
+            req.body.user = user
+        }catch(err){
+            errors['email'] = 'EMAIL_ERROR';
+        }
+
+        //password
+        if(isEmpty(password)){
+            errors['password'] = 'PASSWORD_NOT_FOUND'
+        }else if (!validatePassword(password)) {
+            errors['password'] = 'INVALID_PASSWORD';
+        }
+
+        Helper.returnErrorOrPassToNext(res, next, errors);
+    }
 }
 export default new UserValidator();

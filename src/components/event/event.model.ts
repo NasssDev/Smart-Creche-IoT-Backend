@@ -55,7 +55,8 @@ const EventSchema = new Schema(
             type: Boolean,
             required: true
         }
-    }
+    },
+    { timestamps: true }
 );
 
 export const EventRecord = mongoose.model<Event>('Event', EventSchema);

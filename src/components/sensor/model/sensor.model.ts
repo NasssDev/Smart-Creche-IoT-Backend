@@ -28,7 +28,8 @@ const SensorSchema = new Schema(
         location: {
             type: String,
         }
-    }
+    },
+    { timestamps: true }
 );
 
 export const SensorRecord = mongoose.model<Sensor>('Sensor', SensorSchema);

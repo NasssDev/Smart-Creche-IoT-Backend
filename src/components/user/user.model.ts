@@ -8,8 +8,6 @@ export interface User extends mongoose.Document {
    firstName: string;
    email: string;
    password: string;
-   createdAt: Date;
-   updatedAt: Date;
 }
 
 const UserSchema = new Schema(
@@ -29,16 +27,9 @@ const UserSchema = new Schema(
         password: {
             type: String,
             required: true
-        },
-        createdAt: {
-            type: Date,
-            required: true
-        },
-        updatedAt: {
-            type: Date,
-            required: true
         }
-    }
+    },
+    { timestamps: true }
 );
 
 export const UserRecord = mongoose.model<User>('User', UserSchema);
