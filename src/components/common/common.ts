@@ -20,7 +20,7 @@ interface TokenData {
 interface DataStoredInToken {
    email: string;
    id: string;
-   role?: string;
+   roleId?: string;
    accountId?: string;
    sessionId?: string;
 }
@@ -72,7 +72,6 @@ class Common {
 
                req.body.user = user;
                req.body.tokenData = decoded;
-               res['setLocale'](_.get(user, 'language', 'en'));
                next();
             });
          } else {
@@ -115,10 +114,11 @@ class Common {
          let dataStoredInToken: DataStoredInToken = {
             email: user.email,
             id: user._id,
-            role: userRole?.role,
+            roleId: userRole?.roleId,
             accountId: userRole?.accountId,
             sessionId: session?._id
          };
+         
          return {
             expiresIn,
             token: jwt.sign(dataStoredInToken, secret, { expiresIn })
@@ -137,7 +137,7 @@ class Common {
    public createSetPasswordToken({ data, expiresIn = Constants.OTHER_TOKEN_EXPIRE_IN }: { data: any; expiresIn?}) {
       try {
          const secret = Constants.TOKEN_SECRET.KEY;
-
+         console.log(data, expiresIn);
          return {
             expiresIn,
             token: jwt.sign(data, secret, { expiresIn })

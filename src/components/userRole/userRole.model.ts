@@ -43,7 +43,8 @@ export interface Notification extends mongoose.Document {
             required: true,
             default: true
         }
-     }
+     },
+     { _id: false }
  );
 
 export interface UserRole extends mongoose.Document {
@@ -53,6 +54,7 @@ export interface UserRole extends mongoose.Document {
    roleId: mongoose.Schema.Types.ObjectId;
    isActive: boolean;
    notifications: Notification;
+   defaultLoginAccount: boolean
 }
 
 const UserRoleSchema = new Schema(
@@ -79,7 +81,15 @@ const UserRoleSchema = new Schema(
         },
         notifications: {
             type: NotificationSchema,
-        }
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
+        },
+        defaultLoginAccount: {
+             type: Boolean,
+             default: false
+         }
     },
     { timestamps: true }
 );

@@ -1,6 +1,32 @@
 import * as mongoose from 'mongoose';
+import { NodeSensor , NodeSensorSchema} from '../sensor/model/nodeSensor.model';
 
 const Schema = mongoose.Schema;
+
+export interface Room extends mongoose.Document {
+    name: string;
+    roomId: string;
+    area: number;
+    sensors: [NodeSensor];
+ }
+ 
+ const RoomSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true
+        },
+        roomId: {
+            type: String,
+        },
+        area: {
+            type: Number,
+        },
+        sensors: {
+            type: [NodeSensorSchema],
+        }
+     }
+ );
 
 export interface Address extends mongoose.Document {
     address: string;
@@ -46,6 +72,7 @@ export interface Account extends mongoose.Document {
    siret: string;
    type: string;
    address: Address;
+   roomList: [Room]; 
    email: string;
    phone: number;
    updatedBy: mongoose.Schema.Types.ObjectId;
@@ -68,6 +95,9 @@ const AccountSchema = new Schema(
         address: {
             type: AddressSchema,
         },
+        roomList: {
+            type: [RoomSchema],
+        },
         email: {
             type: String,
         },
@@ -77,7 +107,11 @@ const AccountSchema = new Schema(
         updatedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
-        }
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
+         },
     },
     { timestamps: true }
 );

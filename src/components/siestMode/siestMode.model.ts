@@ -50,6 +50,10 @@ const SiestModeSchema = new Schema(
         },
         sensorList: {
             type: [mongoose.Schema.Types.ObjectId]
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
         }
     },
     { timestamps: true }
