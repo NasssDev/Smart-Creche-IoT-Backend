@@ -1,6 +1,8 @@
 import client from "../../utils/mqtt";
+import { CountryRecord } from "../country/country.model";
 import { SensorRawData } from "./model/sensorRaw.model";
 import { SensorValueRecord } from "./model/sensorValue.model";
+import sensorHelper from "./sensor.helper";
 
 export default class SensorController {
     static getData(room,node_id, id_sensor): void {
@@ -48,7 +50,7 @@ export default class SensorController {
           const messageString = message.toString();
           const data = JSON.parse(messageString);
             data.node_id = node_id;
-            sensorController.addData(data);
+            sensorHelper.addSensorValue(data);
           console.log("Message:", data);
         });
         client.on("error", function (error) {
@@ -70,17 +72,24 @@ export default class SensorController {
      */
     public async addData(rawObj: SensorRawData) {
         const { sensor_id, data, node_id, source_address, tx_time_ms_epoch } = rawObj
-       
-        const sensor = new SensorValueRecord({
+        try{
+          const sensor = new SensorValueRecord({
             accountId: "64b7d3c5e5929ed0614fb986",
             sensorId: sensor_id,
             value: data.lux,
             nodeId: node_id,
             location: source_address,
             date: tx_time_ms_epoch
-        })
-        console.log(sensor);
-         await sensor.save()
+          });
+          await sensor.save();
+
+          console.log(await CountryRecord.find({_id: '64b51f9dd896af49cde3843e'}));
+          
+        }catch(error){
+          console.log(error);
+        }
+       
+        
     }
 }
 
