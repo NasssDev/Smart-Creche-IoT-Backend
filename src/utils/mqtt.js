@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mqtt = require("mqtt");
 var client = mqtt.connect("mqtt://mqtt.arcplex.fr:2295", {
     username: "groupe8",
@@ -8,4 +8,4 @@ var client = mqtt.connect("mqtt://mqtt.arcplex.fr:2295", {
 // client.on('connect', () => {
 //   console.log("Connected MQTT!");
 // });
-exports.default = client;
+exports["default"] = client;
