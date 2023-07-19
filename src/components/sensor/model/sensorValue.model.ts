@@ -21,9 +21,9 @@ const SensorValueSchema = new Schema(
             ref: 'Account'
         },
         sensorId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             required: true,
-            ref: 'Sensor'
+            // ref: 'Sensor'
         },
         value: {
             type: Number,
