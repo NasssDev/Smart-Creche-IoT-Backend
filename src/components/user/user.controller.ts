@@ -12,6 +12,7 @@ import { SessionRecord } from "../session/session.model";
 import { isEmpty } from "../../utils/validator";
 import { redisService } from "../../utils/redis";
 import { NodeSensorRecord } from "../sensor/model/nodeSensor.model";
+import { RoleRecord } from "../role/role.model";
 
 
 
@@ -87,11 +88,20 @@ class UserController {
          await account.save();
 
          // configure userRole
+         const notifications = {
+            mouvement: true,
+            temperature: true,
+            co2: true,
+            humidity: true,
+            noise: true,
+            waterLeak: true
+         }
          const userRole = new UserRoleRecord({
             userId: user?._id,
             accountId: account?._id,
             roleId: process.env.MANAGER_ROLE_ID,
-            defaultLoginAccount: true
+            defaultLoginAccount: true,
+            notifications
          });
          await userRole.save();
             
@@ -291,6 +301,86 @@ class UserController {
             error
          });
          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RESET_PWD_STEP3_ERROR', {});
+         return;
+      }
+   }
+
+   /**
+    * @typedef profil
+    */
+   /**
+    * API to fetch user profil
+    * @route post /api/profil
+    * @group IOT - API for iot
+    * @returns {object} 200 - Ok
+    * @returns {object} 500 - Internal server error
+    */
+   public async getProfil(req: Request, res: Response) {
+      const { user, account } = req.body;
+      try {  
+         const profil = {
+            account: await AccountRecord.findOne({_id: account._id}).lean(),
+            user: await UserRecord.findOne({_id: user._id}).lean(),
+            userRole: await UserRoleRecord.findOne({accountId: account._id, userId: user._id}).lean()
+         }
+         Helper.createResponse(res, HttpStatus.OK, 'FETCH_PROFIL_SUCCESS', {profil});
+            return 
+      } catch (error) {
+         logger.error(__filename, {
+            method: 'getProfil',
+            requestId: req['uuid'],
+            custom_message: 'Error while fetch user profil',
+            error
+         });
+         Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'FETCH_PROFIL_ERROR', {});
+         return;
+      }
+   }
+
+   /**
+    * @typedef profil
+    */
+   /**
+    * API to fetch user profil
+    * @route post /api/profil
+    * @group IOT - API for iot
+    * @returns {object} 200 - Ok
+    * @returns {object} 500 - Internal server error
+    */
+   public async updateProfil(req: Request, res: Response) {
+      const { user, account, notifications, email, positionHeld, firstName, lastName } = req.body;
+      try {  
+
+         await UserRecord.updateOne({_id: user._id}, {$set: {email, firstName, lastName}});
+         const session = await SessionRecord.create({
+            userId: user._id,
+            accountId: account._id
+         });
+
+         const role = await RoleRecord.findOne({type: positionHeld}).lean()
+         const userRole =  await UserRoleRecord.findOne({userId: user._id, accountId: account._id}).lean()
+
+         await UserRoleRecord.updateOne({_id: role._id}, {$set: { notifications, roleId: role._id }})
+
+         const tokenData = Common.createToken({ user, userRole, session: session });    
+         res.setHeader('Set-Cookie', [Helper.createCookie(tokenData)]);
+
+         Helper.createResponse(res, HttpStatus.OK, 'UPDATE_PROFIL_SUCCESS', {
+            token: tokenData.token,
+            account: account,
+            user: user,
+            role: role,
+            userRole: userRole
+         });
+         return 
+      } catch (error) {
+         logger.error(__filename, {
+            method: 'putProfil',
+            requestId: req['uuid'],
+            custom_message: 'Error while update user profil',
+            error
+         });
+         Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'UPDATE_PROFIL_ERROR', {});
          return;
       }
    }

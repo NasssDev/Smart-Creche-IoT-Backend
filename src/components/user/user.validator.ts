@@ -235,5 +235,30 @@ class UserValidator {
 
         Helper.returnErrorOrPassToNext(res, next, errors);
     }
+
+    /**
+    * update profil request payload validation
+    *
+    * @param req - The request object
+    * @param res - The response object
+    * @param next - The next middleware function
+    */
+    public async updateProfilValidator(req: Request, res: Response, next: NextFunction) {
+        const { notifications, email, firstName, lastName, positionHeld  } = req.body;
+
+        const errors = {} 
+
+        //check email
+        if(isEmpty(email)){
+            errors['email'] = 'EMAIL_NOT_FOUND'
+        }else if (!isEmail(email)) {
+            errors['email'] = 'INVALID_EMAIL';
+        }
+        req.body.email = email.toLowerCase()
+        req.body.firstName = firstName.toLowerCase()
+        req.body.lastName = lastName.toLowerCase()
+
+        Helper.returnErrorOrPassToNext(res, next, errors);
+    }
 }
 export default new UserValidator();

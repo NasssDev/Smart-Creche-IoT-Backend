@@ -23,4 +23,13 @@ export default (app) => {
     [Common.authenticateToken, Common.authenticateAccount],
     validator.resetPwd3Validator, 
     (req, res) => userController.changePassword(req, res));
+
+    app.get('/api/profil',
+    [Common.authenticateToken, Common.authenticateAccount],
+    (req, res) => userController.getProfil(req, res));
+
+    app.put('/api/profil',
+    [Common.authenticateToken, Common.authenticateAccount],
+    validator.updateProfilValidator, 
+    (req, res) => userController.updateProfil(req, res));
 }
