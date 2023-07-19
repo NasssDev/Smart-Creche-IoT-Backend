@@ -8,6 +8,8 @@ export interface User extends mongoose.Document {
    firstName: string;
    email: string;
    password: string;
+   resetPassword: boolean;
+   resetPasswordStep: number;
 }
 
 const UserSchema = new Schema(
@@ -27,6 +29,13 @@ const UserSchema = new Schema(
         password: {
             type: String,
             required: true
+        },
+        resetPassword: {
+            type: Boolean,
+            default: false
+        },
+        resetPasswordStep: {
+            type: Number,
         },
         isDeleted: {
             type: Boolean,

@@ -7,6 +7,8 @@ export class Constants {
  
     public static INVITE_EXPIRE_IN = 24 * 60 * 60; // 24 hour
 
+    public static TTL = 3600;
+
     public static TOKEN_SECRET = {
         KEY: 'jwt_secret'
     };

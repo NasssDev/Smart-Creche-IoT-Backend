@@ -72,7 +72,6 @@ class Common {
 
                req.body.user = user;
                req.body.tokenData = decoded;
-               res['setLocale'](_.get(user, 'language', 'en'));
                next();
             });
          } else {

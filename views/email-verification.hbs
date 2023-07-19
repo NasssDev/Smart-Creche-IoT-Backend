@@ -1,0 +1,115 @@
+<html>
+   <head>
+      <title>IOT</title>
+      <link rel='preconnect' href='https://fonts.googleapis.com' />
+      <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+      <link
+         href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap'
+         rel='stylesheet'
+      />
+   </head>
+
+   <body
+      style="
+      width: 100%;
+      background-color: #f2f2f2;
+      display: flex;
+      font-family: 'Roboto', sans-serif;
+    "
+   >
+
+      <div style='padding: 50px; width: 600px; margin: 0 auto;'>
+         <div>
+            <div
+               style='
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 30px;
+          '
+            >
+               <div>
+                  <img style='width: 134px; padding: 10px 0 40px 10px' src='{{IMAGE_LOGO}}' />
+               </div>
+
+               <div>
+                  <img
+                     style='
+                width: 233px;
+                padding-bottom: 27px;
+                margin: 0 auto;
+                display: block;
+              '
+                     src='{{IMAGE_OPT_VERIFICATION}}'
+                  />
+               </div>
+
+               <h3
+                  style='
+              font-size: 24px;
+              font-weight: 600;
+              color: #000000;
+              padding-bottom: 20px;
+              margin: 0;
+            '
+               >
+                  OTP Verification
+               </h3>
+
+               <small
+                  style='
+              font-size: 18px;
+              color: #000000;
+              font-weight: 500;
+              margin-bottom: 15px;
+            '
+               >Hello {{name}},</small>
+
+               <p
+                  style='
+              color: rgba(0, 0, 0, 0.55);
+              font-size: 18px;
+              font-weight: normal;
+              margin-bottom: 32px;
+            '
+               >
+                  Here is one time password to validate your email address
+                  <a style='color: #C9673E;'>{{email}}</a>
+               </p>
+
+               <div
+                  style='
+              color: #c9673e;
+              font-size: 36px;
+              font-weight: 500;
+              line-height: 1.33;
+              width: 100%;
+              padding: 15px 0;
+              border-radius: 5px;
+              background-color: rgba(201, 103, 62, 0.15);
+              margin-bottom: 30px;
+              text-align: center;
+            '
+               >
+                  {{otp}}
+               </div>
+
+               <p
+                  style='
+              color: rgba(0, 0, 0, 0.55);
+              font-size: 14px;
+              line-height: 1.43;
+              font-weight: normal;
+              margin: 0;
+            '
+               >
+                  Cheers,
+
+                  <br />
+                  <b style='color: #000000; font-weight: 400'> The IOT Team</b>
+               </p>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
