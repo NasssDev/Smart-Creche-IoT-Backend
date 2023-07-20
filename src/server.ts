@@ -8,6 +8,8 @@ import app from './app';
 import mongoose from 'mongoose';
 import { connection } from './utils/dbConnection';
 import { logger } from './utils/logger';
+import sensorHelper from './components/sensor/sensor.helper';
+import { manageSensorValue } from './middlewares/manageSensorValue';
 
 const port = process.env.PORT || 3000;
 
@@ -19,6 +21,12 @@ connection.then(() => {
       logger.info(`Server is running on ${port} with process id ${process.pid}`);
    });
 });
+
+// setInterval(function(){
+   manageSensorValue.manageValue()
+// }, 60000*22)
+
+// sensorHelper.getData("room_1", "0519adec-dcf7-40f2-a73d-3ca7cb3a3dcd", 118);
 
 // Exit handler for server
 function exitHandler() {

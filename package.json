@@ -11,7 +11,8 @@
     "dev": "npm run build && npm start",
     "start": "node dist/server.js",
     "watch-node": "nodemon dist/server.js",
-    "watch-ts": "tsc -w"
+    "watch-ts": "tsc -w",
+    "build-and-start": "npm run build && npm start"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
@@ -38,13 +39,14 @@
     "nodemon": "^3.0.1",
     "redis": "^2.8.0",
     "save": "^2.9.0",
-    "typescript": "^4.9.4",
+    "tsc": "^2.0.4",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",
     "winston": "^3.10.0"
   },
   "devDependencies": {
     "@types/bull": "^4.10.0",
-    "tcs": "^10.0.2"
+    "tcs": "^10.0.2",
+    "typescript": "^5.1.6"
   }
 }

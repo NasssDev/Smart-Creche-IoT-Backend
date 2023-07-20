@@ -2,32 +2,42 @@ import * as mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
+export interface ValueObject extends mongoose.Document {
+    name: string;
+    value: number;
+ }
+ 
+ const ValueObjectSchema = new Schema(
+    {
+         name: {
+             type: String,
+         },
+         value: {
+             type: Number,
+         }
+     },
+     { _id: false }
+ );
+
 export interface SensorValue extends mongoose.Document {
    _id: mongoose.Schema.Types.ObjectId;
-   accountId: mongoose.Schema.Types.ObjectId;
    sensorId: mongoose.Schema.Types.ObjectId;
    nodeId: string;
    location: string;
-   value: number;
+   value: ValueObject;
    isNegative: boolean;
    date: Date;
 }
 
 const SensorValueSchema = new Schema(
    {
-        accountId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: 'Account'
-        },
         sensorId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             required: true,
-            ref: 'Sensor'
+            // ref: 'Sensor'
         },
         value: {
-            type: Number,
-            required: true,
+            type: ValueObjectSchema,
         },
         nodeId: {
             type: String,

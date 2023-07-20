@@ -1,0 +1,12 @@
+[{
+  "_id": {
+    "$oid": "64b51f9dd896af49cde3843e"
+  },
+  "name": "France",
+  "iso3": "FRA",
+  "iso2": "FR",
+  "phone_code": "33",
+  "capital": "Paris",
+  "currency": "EUR",
+  "flag": "fr.svg"
+}]
