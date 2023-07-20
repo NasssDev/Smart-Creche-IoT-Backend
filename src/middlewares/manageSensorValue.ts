@@ -10,8 +10,9 @@ class ManageSensorValue {
             const sensors = await NodeSensorRecord.find({roomId: roomIds[i] }).lean()
             for(let j = 0; j<sensors.length; j++){
                     //setInterval(function(){
-                       await sensorHelper.getData(roomIds[i], sensors[j].nodeId, sensors[j].sensorId);
-                       console.log('Entry done', roomIds[i], sensors[j].nodeId, sensors[j].sensorId);
+                console.log(roomIds[i], sensors[j].nodeId, sensors[j].sensorId); 
+                sensorHelper.getData(roomIds[i], sensors[j].nodeId, sensors[j].sensorId);
+                       //console.log('Entry done', roomIds[i], sensors[j].nodeId, sensors[j].sensorId);
                     //}, 30000)}               
         }
 
