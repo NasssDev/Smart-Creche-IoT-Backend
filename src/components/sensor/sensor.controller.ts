@@ -56,6 +56,60 @@ export default class SensorController {
        
         
 //     }
+  public async getSensorByLocation(req: Request, res: Response) {
+    try {
+          await sensorHelper.getSensorByLocation(req.params.location);
+          Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
+          return;
+       } catch (error) {
+          logger.error(__filename, {
+             method: 'runDataFetch',
+             requestId: req['uuid'],
+             custom_message: 'Error while finalize runDataFetch',
+             error
+          });
+          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {});
+          return;
+        }
+       
+        
+    }
+  public async getSensorValAvg(req: Request, res: Response) {
+    try {
+          await sensorHelper.getSensorValAvg(req.params.location);
+          Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
+          return;
+       } catch (error) {
+          logger.error(__filename, {
+             method: 'runDataFetch',
+             requestId: req['uuid'],
+             custom_message: 'Error while finalize runDataFetch',
+             error
+          });
+          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {});
+          return;
+        }
+       
+        
+    }
+//   public async addSensor(req: Request, res: Response) {
+//     try {
+//           await sensorHelper.addSensors(req.body);
+//           Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
+//           return;
+//        } catch (error) {
+//           logger.error(__filename, {
+//              method: 'runDataFetch',
+//              requestId: req['uuid'],
+//              custom_message: 'Error while finalize runDataFetch',
+//              error
+//           });
+//           Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {});
+//           return;
+//         }
+       
+        
+//     }
 }
 
 

@@ -6,7 +6,9 @@ export default (app) => {
         (req, res) => sensorController.runDataFetch(req, res));
     // app.post('/api/sensor/add',
     //     (req, res) => sensorController.addSensor(req, res));
-    // app.get('/api/sensor_avg/:location',
-    //     (req, res) => sensorController.getSensorByLocation(req, res));
-    
+    app.get('/api/sensors/:location',
+        (req, res) => sensorController.getSensorByLocation(req, res));
+    app.get('/api/sensor_val_avg/x',
+        (req, res) => sensorController.getSensorValAvg(req, res));
+
 }
