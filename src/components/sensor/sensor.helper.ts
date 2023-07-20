@@ -1,5 +1,6 @@
 import { logger } from "../../utils/logger";
 import client from "../../utils/mqtt";
+import eventHelper from "../event/event.helper";
 import { Sensor, SensorRecord } from "./model/sensor.model";
 import { SensorValueRecord } from "./model/sensorValue.model";
 const messageListeners = {};
@@ -48,7 +49,10 @@ class SensorHelper {
               const messageString = message.toString();
               let _data = JSON.parse(messageString);
               _data.node_id = node_id;
-              SensorHelper.addSensorValue(_data);
+                SensorHelper.addSensorValue(_data);
+                const value = Object.values(_data.data);
+                console.log(value);
+                eventHelper.valueLimit(_data.sensor_id, _data.source_address, Number(value[0]))
               console.log("Inserted:", _data);
             };
       
