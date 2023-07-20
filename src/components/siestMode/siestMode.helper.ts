@@ -1,4 +1,6 @@
 import client from "../../utils/mqtt";
+import { SensorValueRecord } from "../sensor/model/sensorValue.model";
+import { SiestModeRecord } from "./siestMode.model";
 
 class SiesteModeHelper { 
     public async onMode() { 
@@ -39,6 +41,33 @@ class SiesteModeHelper {
                     "cmd_type": 208
                 };
                 client.publish(topic, JSON.stringify(message));
+                resolve(true);
+            } catch (err) {
+                reject(err);
+            }
+            });
+    }
+    public addEndTime(time) { 
+        new Promise(async(resolve, reject) => {
+            try {
+                // Find the last document in the collection
+                const lastDocument = await SiestModeRecord.findOne({}, { sort: { _id: -1 } });
+                if (lastDocument) {
+                    // Update the field in the last document
+                    const updatedField = time;
+                    // const lastDocument = await SiestModeRecord.findOne({}, {}, { sort: { _id: -1 } });
+
+                    // if (lastDocument) {
+                      lastDocument.end = updatedField;
+                      await lastDocument.save();
+                
+                      console.log('Document updated:', lastDocument);
+                    // } else {
+                    //   console.log('No documents found in the collection.');
+                    // }
+                  } else {
+                    console.log('No documents found in the collection.');
+                  }
                 resolve(true);
             } catch (err) {
                 reject(err);

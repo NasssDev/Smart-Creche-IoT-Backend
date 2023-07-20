@@ -2,10 +2,19 @@ import { Helper } from "../../utils/helper";
 import { logger } from "../../utils/logger";
 import HttpStatus from 'http-status-codes';
 import siestModeHelper from "./siestMode.helper";
+import { Request, Response } from 'express';
+import { SiestModeRecord } from "./siestMode.model";
 class SiestModeController {
     public async onMode(req: Request, res: Response) { 
         try {
-            const result = await siestModeHelper.onMode();
+            const { account, user } = req.body;
+            await siestModeHelper.onMode();
+            const sleepmode = new SiestModeRecord({
+                accountId: account._id,
+                start: new Date(),
+                end: null,
+            });
+            await sleepmode.save();
             console.log("ENDED")
             Helper.createResponse(res, HttpStatus.OK, 'SLEEP_MODE_ON',{});
           return;
@@ -22,7 +31,13 @@ class SiestModeController {
     }
     public async offMode(req: Request, res: Response) { 
         try {
-            const result = siestModeHelper.offMode();
+            const { account, user } = req.body;
+            const thisSleepMode = await SiestModeRecord.findOne({ accountId: account, end: null });
+            if (thisSleepMode) {
+                await SiestModeRecord.updateOne({ _id: thisSleepMode._id }, { $set: { end: new Date() } });
+                await siestModeHelper.offMode();
+            }
+            
             Helper.createResponse(res, HttpStatus.OK, 'SLEEP_MODE_OFF',{});
           return;
         } catch (err) {
