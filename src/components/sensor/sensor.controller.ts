@@ -60,6 +60,7 @@ export default class SensorController {
     try {
       const {location} =req.params
       let locationString = location
+      let resultList = [];
       const sensors = await SensorValueRecord.aggregate([
          { $sort: { createdAt: -1 } },
          {
@@ -71,9 +72,15 @@ export default class SensorController {
          { $project: { sensorvalues: { $slice: ["$sensorvalues", 1] } } }
       ]);
       let _sensorList = sensors.filter((ele) => ele["_id"].location == locationString);
-      
-          Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{_sensorList});
-          
+      _sensorList.forEach((ele) => {
+        resultList.push({
+          sensor_id: ele["_id"]["sensorId"],
+          location: ele["_id"]["location"],
+          sensor_name: "as",
+          values: ele["sensorvalues"]
+        })
+      })
+          Helper.createResponse(res, HttpStatus.OK, 'getSensorByLocation',resultList);
           return;
        } catch (error) {
           logger.error(__filename, {
@@ -82,7 +89,7 @@ export default class SensorController {
              custom_message: 'Error while finalize runDataFetch',
              error
           });
-          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {});
+          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'getSensorByLocation',error);
           return;
         }
        
