@@ -32,4 +32,8 @@ export default (app) => {
     [Common.authenticateToken, Common.authenticateAccount],
     validator.updateProfilValidator, 
     (req, res) => userController.updateProfil(req, res));
+
+    app.post('/api/logout',
+    [Common.authenticateToken, Common.authenticateAccount],
+    (req, res) => userController.logout(req, res));
 }

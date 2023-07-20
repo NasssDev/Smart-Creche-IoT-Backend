@@ -13,6 +13,8 @@ import { isEmpty } from "../../utils/validator";
 import { redisService } from "../../utils/redis";
 import { NodeSensorRecord } from "../sensor/model/nodeSensor.model";
 import { RoleRecord } from "../role/role.model";
+import userHelper from "./user.helper";
+import CustomError from "../../utils/customError";
 
 
 
@@ -382,6 +384,45 @@ class UserController {
          });
          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'UPDATE_PROFIL_ERROR', {});
          return;
+      }
+   }
+
+   /**
+    * @typedef logout
+    */
+   /**
+    * API to logout
+    * @route post /api/logout
+    * @group IOT - API for iot
+    * @returns {object} 200 - Ok
+    * @returns {object} 500 - Internal server error
+    */
+   public async logout(req: Request, res: Response) {
+      try {
+         /** remove user session */
+         await userHelper.removeUserSession({
+            userId: req.body.user._id,
+            sessionId: req['session']?._id
+         });
+         return Helper.createResponse(res, HttpStatus.OK, 'USER.LOGOUT', {});
+      } catch (error) {
+         logger.error(__filename, {
+            method: 'logout',
+            requestId: req['uuid'],
+            custom_message: 'Error while logging out user',
+            error
+         });
+
+         if (error instanceof CustomError) {
+            Helper.createResponseV2({
+               message: req['__'](...error.error),
+               res,
+               status: error.statusCode,
+               payload: error.data
+            });
+            return;
+         }
+         return Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'INTERNAL_SERVER_ERROR', {});
       }
    }
 
