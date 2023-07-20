@@ -22,7 +22,7 @@ export default class SensorController {
   public async runDataFetch(req: Request, res: Response) {
     console.log("Sdsa");
     try {
-      sensorHelper.getData("room_1", "0519adec-dcf7-40f2-a73d-3ca7cb3a3dcd", 118);
+         sensorHelper.getData("room_1", "0519adec-dcf7-40f2-a73d-3ca7cb3a3dcd", 118);
           Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
           return;
        } catch (error) {
@@ -38,24 +38,24 @@ export default class SensorController {
        
         
     }
-  public async addSensor(req: Request, res: Response) {
-    try {
-          await sensorHelper.addSensors(req.body);
-          Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
-          return;
-       } catch (error) {
-          logger.error(__filename, {
-             method: 'runDataFetch',
-             requestId: req['uuid'],
-             custom_message: 'Error while finalize runDataFetch',
-             error
-          });
-          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {});
-          return;
-        }
+//   public async addSensor(req: Request, res: Response) {
+//     try {
+//           await sensorHelper.addSensors(req.body);
+//           Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
+//           return;
+//        } catch (error) {
+//           logger.error(__filename, {
+//              method: 'runDataFetch',
+//              requestId: req['uuid'],
+//              custom_message: 'Error while finalize runDataFetch',
+//              error
+//           });
+//           Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {});
+//           return;
+//         }
        
         
-    }
+//     }
 }
 
 
