@@ -117,6 +117,7 @@ class SensorHelper {
                     { $project: { sensorvalues: { $slice: ["$sensorvalues", 1] } } }
                 ]);
                 _sensorList = sensors.filter((ele) => ele["_id"].location == locationString);
+                console.log(_sensorList);
                 resolve(_sensorList);
             } catch (err) {
                 reject(err.toString);

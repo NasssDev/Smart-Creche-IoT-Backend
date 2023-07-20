@@ -58,8 +58,26 @@ export default class SensorController {
 //     }
   public async getSensorByLocation(req: Request, res: Response) {
     try {
-          await sensorHelper.getSensorByLocation(req.params.location);
-          Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
+      const {location} =req.params
+      let locationString = location
+      const sensors = await SensorValueRecord.aggregate([
+         { $sort: { createdAt: -1 } },
+         {
+             $group: {
+                 _id: { location: "$location", sensorId: "$sensorId" }, sensorvalues: { $push: "$value" }
+
+             }
+         },
+         { $project: { sensorvalues: { $slice: ["$sensorvalues", 1] } } }
+     ]);
+
+     let _sensorList = sensors.filter((ele) => ele["_id"].location == locationString);
+
+         // const result = await sensorHelper.getSensorByLocation(req.params.location);
+         // console.log(result, req.params.location);
+
+          Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{_sensorList});
+          
           return;
        } catch (error) {
           logger.error(__filename, {
