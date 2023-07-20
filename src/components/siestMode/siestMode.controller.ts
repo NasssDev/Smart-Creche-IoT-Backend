@@ -1,7 +1,7 @@
 import { Helper } from "../../utils/helper";
 import { logger } from "../../utils/logger";
-import siestModeHelper from "./siestMode.helper";
 import HttpStatus from 'http-status-codes';
+import siestModeHelper from "./siestMode.helper";
 class SiestModeController {
     public async onMode(req: Request, res: Response) { 
         try {
