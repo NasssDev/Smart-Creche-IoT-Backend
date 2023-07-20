@@ -2,8 +2,9 @@ import { logger } from "../../utils/logger";
 import client from "../../utils/mqtt";
 import { Sensor, SensorRecord } from "./model/sensor.model";
 import { SensorValueRecord } from "./model/sensorValue.model";
-
+const messageListeners = {};
 class SensorHelper {
+
     /**
     * @description add value
     */
@@ -29,54 +30,58 @@ class SensorHelper {
         }
     }
     public async  getData(room, node_id, id_sensor) {
-        // const topic = "groupe8/packet//118";
-    
         const topic = "groupe8/packet/" + room + "/" + node_id + "/" + id_sensor;
-        await SensorHelper.getconnection(topic, node_id);
-        console.log('done');
-    
+
+        // Check if the message listener for this topic already exists
+        if (!messageListeners[topic]) {
+          // If not, create the MQTT connection and add the message listener
+          await SensorHelper.getconnection(topic, node_id);
+  }
     }
     
     static async getconnection(topic: string, node_id: string) {
         return new Promise((resolve, reject) => {
-            console.log('getConnecion')
-            client.on("connect", function () {
-                console.log("Connected MQTT!");
+          // Check if the message listener for this topic already exists
+          if (!messageListeners[topic]) {
+            // If not, create a new listener function and subscribe to the topic
+            const messageListener = function (topic, message) {
+              const messageString = message.toString();
+              let _data = JSON.parse(messageString);
+              _data.node_id = node_id;
+              SensorHelper.addSensorValue(_data);
+              console.log("Inserted:", _data);
+            };
       
-                // Subscribe to the topic
-                client.subscribe(topic, function (error) {
-                    if (error) {
-                        console.log("Error subscribing to topic:", error);
-                    } else {
-                        console.log("Subscribed to topic successfully!");
-                    }
-                });
-            });
-            // Handle MQTT events and messages
-            // client.on("message", function (topic, message) {
-            //   console.log("Message:", message.toString());
-            // });
-            client.on("message", async function (topic, message) {
-                const messageString = message.toString();
-                let _data = JSON.parse(messageString);
-                _data.node_id = node_id;
-                SensorHelper.addSensorValue(_data);
-                console.log("Message:", _data);
-                resolve(true);
-
-            });
-            client.on("error", function (error) {
-          
-                console.log("MQTT error:", error);
+            // Subscribe to the topic
+            client.subscribe(topic, function (error) {
+              if (error) {
+                console.log("Error subscribing to topic:", error);
                 reject(error);
+              } else {
+                console.log("Subscribed to topic successfully!");
+                // Add the listener to the messageListeners object
+                messageListeners[topic] = messageListener;
+                // Add the listener to the MQTT client
+                client.on("message", messageListener);
+                // Resolve the promise
+                resolve("Done");
+              }
             });
+          } else {
+            // If the listener for this topic already exists, simply resolve the promise
+            resolve("Skipped");
+          }
       
-            client.on("close", function () {
-                console.log("MQTT connection closed.");
-            });
-        })
-        
-    }
+          client.on("error", function (error) {
+            console.log("MQTT error:", error);
+            reject(error);
+          });
+      
+          client.on("close", function () {
+            console.log("MQTT connection closed.");
+          });
+        });
+      }
     // public async addSensors(sensor: Sensor) {
     //     new Promise(async (resolve, reject) => { 
     //         try {
