@@ -24,38 +24,25 @@ export interface SensorEvent extends mongoose.Document {
 
 export interface Event extends mongoose.Document {
    _id: mongoose.Schema.Types.ObjectId;
-   date: Date;
    accountId: mongoose.Schema.Types.ObjectId; 
-   type: string;
    action: string;
-   sensor: SensorEvent;
-   isLowState: Boolean;
+   sensor: string;
 }
 
 const EventSchema = new Schema(
    {
-        date: {
-            type: Date,
-            required: true,
-        },
         accountId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: 'Account'
         },
-        type: {
-            type: String,
-        },
         action: {
             type: String,
         },
         sensor: {
-            type: SensorEventSchema,
+            type: String,
         },
-        isLowState: {
-            type: Boolean,
-            required: true
-        }
+
     },
     { timestamps: true }
 );
