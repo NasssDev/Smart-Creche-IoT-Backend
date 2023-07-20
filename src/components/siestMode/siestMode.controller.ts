@@ -5,7 +5,8 @@ import siestModeHelper from "./siestMode.helper";
 class SiestModeController {
     public async onMode(req: Request, res: Response) { 
         try {
-            const result = siestModeHelper.onMode();
+            const result = await siestModeHelper.onMode();
+            console.log("ENDED")
             Helper.createResponse(res, HttpStatus.OK, 'SLEEP_MODE_ON',{});
           return;
         } catch (err) {
