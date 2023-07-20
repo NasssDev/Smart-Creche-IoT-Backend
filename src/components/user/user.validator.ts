@@ -102,7 +102,7 @@ class UserValidator {
         }else if (!isEmail(email)) {
             errors['email'] = 'INVALID_EMAIL';
         }
-        req.body.email = email.toLowerCase()
+        //req.body.email = email.toLowerCase()
 
         try{
             const user : any = await UserRecord.findOne({ email, isDeleted: false }).lean();
