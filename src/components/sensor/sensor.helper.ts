@@ -39,7 +39,7 @@ class SensorHelper {
     
     static async getconnection(topic: string, node_id: string) {
         return new Promise((resolve, reject) => {
-            console.log('xwxw')
+            console.log('getConnecion')
             client.on("connect", function () {
                 console.log("Connected MQTT!");
       

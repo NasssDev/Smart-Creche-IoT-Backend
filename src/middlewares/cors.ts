@@ -1,15 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-//const allowedOrigins = ['http://localhost:3000', 'https://iot-backend-ym14.onrender.com'];
-const options: cors.CorsOptions = {
-   origin: true,
-   method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
- };
 class CORS {
 
 
    init(app: express.Application) {
-      app.use(cors(options));
+      app.use(cors({
+         origin: "*",
+         method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+         credential:  true,
+         exposedHeaders: ["*"]
+      }));
    }
 }
 
