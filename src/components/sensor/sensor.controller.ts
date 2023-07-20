@@ -69,13 +69,9 @@ export default class SensorController {
              }
          },
          { $project: { sensorvalues: { $slice: ["$sensorvalues", 1] } } }
-     ]);
-
-     let _sensorList = sensors.filter((ele) => ele["_id"].location == locationString);
-
-         // const result = await sensorHelper.getSensorByLocation(req.params.location);
-         // console.log(result, req.params.location);
-
+      ]);
+      let _sensorList = sensors.filter((ele) => ele["_id"].location == locationString);
+      
           Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{_sensorList});
           
           return;
@@ -94,9 +90,32 @@ export default class SensorController {
     }
   public async getSensorValAvg(req: Request, res: Response) {
     try {
-          await sensorHelper.getSensorValAvg(req.params.location);
-          Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH',{});
-          return;
+      const sensors = await SensorValueRecord.aggregate([
+        { $sort: { createdAt: -1 } },
+        {
+            $group: {
+                _id: { location: "$location", sensorId: "$sensorId" }, sensorvalues: { $push: "$value" }
+
+            }
+        },
+        { $project: { sensorvalues: { $slice: ["$sensorvalues", 1] } } }
+      ]);
+      let count = 0;
+      let totalValue = 0;
+      sensors.forEach((ele,) => {
+        if (ele["_id"].sensorId == req.params.id) {
+          if (ele["sensorvalues"].length > 0) {
+            count++;
+            const valObj = ele["sensorvalues"][0];
+            const skey = Object.keys(valObj);
+            totalValue += valObj[skey[1]];
+          }
+          
+        }
+      })
+      console.log(count);
+      const average = totalValue / count;
+      Helper.createResponse(res, HttpStatus.OK, 'RAN DATA FETCH', { average });
        } catch (error) {
           logger.error(__filename, {
              method: 'runDataFetch',
@@ -104,7 +123,7 @@ export default class SensorController {
              custom_message: 'Error while finalize runDataFetch',
              error
           });
-          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {});
+          Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'RAN DATA_ERRRO', {error});
           return;
         }
        

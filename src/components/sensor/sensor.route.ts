@@ -8,7 +8,7 @@ export default (app) => {
     //     (req, res) => sensorController.addSensor(req, res));
     app.get('/api/sensors/:location',
         (req, res) => sensorController.getSensorByLocation(req, res));
-    app.get('/api/sensor_val_avg/x',
+    app.get('/api/sensor_val_avg/:id',
         (req, res) => sensorController.getSensorValAvg(req, res));
 
 }
