@@ -7,6 +7,7 @@ import { SensorValueRecord } from "./model/sensorValue.model";
 // import sensorHelper from "./sensor.helper";
 import { Request, Response } from 'express';
 import { logger } from "../../utils/logger";
+import { SensorRecord } from "./model/sensor.model";
 
 export default class SensorController {
     
@@ -71,12 +72,19 @@ export default class SensorController {
          },
          { $project: { sensorvalues: { $slice: ["$sensorvalues", 1] } } }
       ]);
+      console.log("sensor");
+      const sensor = await SensorRecord.find();
+     
+      // console.log(sensor);
       let _sensorList = sensors.filter((ele) => ele["_id"].location == locationString);
       _sensorList.forEach((ele) => {
+
+        const thisSensor = sensor.find(element => element.sensorId == ele["_id"]["sensorId"]);
         resultList.push({
           sensor_id: ele["_id"]["sensorId"],
           location: ele["_id"]["location"],
-          sensor_name: "as",
+          sensor_name: thisSensor?.name || "",
+          sensor_unit: thisSensor?.unit || "",
           values: ele["sensorvalues"]
         })
       })

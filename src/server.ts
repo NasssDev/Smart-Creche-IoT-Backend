@@ -23,7 +23,7 @@ connection.then(() => {
 });
 
 // setInterval(function(){
-   manageSensorValue.manageValue()
+   // manageSensorValue.manageValue()
 // }, 60000*22)
 
 // sensorHelper.getData("room_1", "0519adec-dcf7-40f2-a73d-3ca7cb3a3dcd", 118);
