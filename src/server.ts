@@ -8,6 +8,7 @@ import app from './app';
 import mongoose from 'mongoose';
 import { connection } from './utils/dbConnection';
 import { logger } from './utils/logger';
+import sensorHelper from './components/sensor/sensor.helper';
 
 const port = process.env.PORT || 3000;
 
@@ -17,6 +18,9 @@ connection.then(() => {
    logger.info('DB connected successfully');
    server.listen(port, () => {
       logger.info(`Server is running on ${port} with process id ${process.pid}`);
+      console.log("dass");
+      sensorHelper.getData("room_1", "0519adec-dcf7-40f2-a73d-3ca7cb3a3dcd", 118);
+console.log("dass");
    });
 });
 

@@ -1,5 +1,6 @@
 import { logger } from "../../utils/logger";
 import client from "../../utils/mqtt";
+import { Sensor, SensorRecord } from "./model/sensor.model";
 import { SensorValueRecord } from "./model/sensorValue.model";
 
 class SensorHelper {
@@ -75,12 +76,38 @@ class SensorHelper {
         // client.on("message", function (topic, message) {
         //   console.log("Message:", message.toString());
         // });
-        client.on("message", function (topic, message) {
+        client.on("message", async function (topic, message) {
           const messageString = message.toString();
-          const data = JSON.parse(messageString);
-            data.node_id = node_id;
-            SensorHelper.addSensorValue(data);
-          console.log("Message:", data);
+          let _data = JSON.parse(messageString);
+            _data.node_id = node_id;
+            try {
+                // const {
+                //     sensor_id, 
+                //     datas, 
+                //     node_id, 
+                //     source_address, 
+                //     tx_time_ms_epoch
+                // } = data;
+            const sensorValue = new SensorValueRecord({
+                accountId: "64b7d3c5e5929ed0614fb986",
+                sensorId: _data.sensor_id,
+                value: _data.data.lux,
+                nodeId: _data.node_id,
+                location: _data.source_address,
+                date: _data.tx_time_ms_epoch
+              });
+              await sensorValue.save();
+        } catch (error) {
+            logger.error(__filename, {
+                method: 'addSensoeValue',
+                requestId: '',
+                custom_message: 'Error while add value of sensor',
+                error
+            });
+            throw error;
+        }
+            // SensorHelper.addSensorValue(data);
+          console.log("Message:", _data);
         });
         client.on("error", function (error) {
           console.log("MQTT error:", error);
@@ -89,6 +116,32 @@ class SensorHelper {
         client.on("close", function () {
           console.log("MQTT connection closed.");
         });
+    }
+    public async addSensors(sensor: Sensor) {
+        new Promise(async (resolve, reject) => { 
+            try {
+                const senors = new SensorRecord(sensor);
+                await senors.save();
+                resolve("ADDED_SENSOR");
+            } catch (err) {
+                reject(err.toString);
+            }
+            
+        })
+      
+    }
+    public async byLocation(sensor: Sensor) {
+        new Promise(async (resolve, reject) => { 
+            try {
+                const senors = new SensorRecord(sensor);
+                await senors.save();
+                resolve("ADDED_SENSOR");
+            } catch (err) {
+                reject(err.toString);
+            }
+            
+        })
+      
     }
 
 }
