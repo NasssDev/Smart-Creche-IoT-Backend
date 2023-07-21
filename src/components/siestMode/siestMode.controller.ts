@@ -57,7 +57,7 @@ class SiestModeController {
             const sensorID = [Constants.SENSORS.TEMPERATURE, Constants.SENSORS.CO2, Constants.SENSORS.SOUND, Constants.SENSORS.HUMIDITY, Constants.SENSORS.LUMINOSITY];
             const location = ["63c09edc-771b-4e15-ab00-237bb926b040"];
             let sensorsvalue = [];
-            const thisSleepMode = await SiestModeRecord.findOne({ accountId: "64b82716c3836bc749487d3b" });
+            const thisSleepMode = await SiestModeRecord.findOne({ accountId: "64b82716c3836bc749487d3b" }).sort({createdAt: - 1});
             for (let i = 0; i < sensorID.length ; i++) {
                 const sensorresult = await SensorValueRecord.findOne({ location, sensorId: sensorID[i] })
                 sensorsvalue.push(sensorresult);
