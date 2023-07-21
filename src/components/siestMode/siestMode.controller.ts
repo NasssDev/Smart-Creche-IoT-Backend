@@ -56,7 +56,7 @@ class SiestModeController {
     public async getInfo(req: Request, res: Response) { 
         try {
             const { account, user } = req.body;
-            const sensorID = [Constants.SENSORS.TEMPERATURE, Constants.SENSORS.CO2, Constants.SENSORS.SOUND];
+            const sensorID = [Constants.SENSORS.TEMPERATURE, Constants.SENSORS.CO2, Constants.SENSORS.SOUND, Constants.SENSORS.HUMIDITY, Constants.SENSORS.LUMINOSITY];
             const location = ["63c09edc-771b-4e15-ab00-237bb926b040"];
             let sensorsvalue = [];
             const thisSleepMode = await SiestModeRecord.findOne({ accountId: "64b82716c3836bc749487d3b" });
