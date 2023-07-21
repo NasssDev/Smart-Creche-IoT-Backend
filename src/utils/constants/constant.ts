@@ -2,6 +2,7 @@ export class Constants {
     public static JWT_TOKEN_EXPIRE_IN = 7 * 24 * 60 * 60; // 7 days
 
     public static USER_SESSION_EXPIRE_IN = 1 * 60 * 60; // 1 hour
+    public static ACCOUNT_ID = "64b82716c3836bc749487d3b" // 1 hour
  
     public static OTHER_TOKEN_EXPIRE_IN = 5 * 60; // 5 minute
  

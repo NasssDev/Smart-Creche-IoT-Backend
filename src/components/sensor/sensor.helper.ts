@@ -51,7 +51,6 @@ class SensorHelper {
               _data.node_id = node_id;
                 SensorHelper.addSensorValue(_data);
                 const value = Object.values(_data.data);
-                console.log(value);
                 eventHelper.valueLimit(_data.sensor_id, _data.source_address, Number(value[0]))
               console.log("Inserted:", _data);
             };
@@ -71,6 +70,7 @@ class SensorHelper {
                 resolve("Done");
               }
             });
+              
           } else {
             // If the listener for this topic already exists, simply resolve the promise
             resolve("Skipped");

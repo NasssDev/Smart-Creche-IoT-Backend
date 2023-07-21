@@ -9,10 +9,9 @@ import { Constants } from "../../utils/constants";
 class SiestModeController {
     public async onMode(req: Request, res: Response) { 
         try {
-            const { account, user } = req.body;
             await siestModeHelper.onMode();
             const sleepmode = new SiestModeRecord({
-                accountId: account._id,
+                accountId: Constants.ACCOUNT_ID,
                 start: new Date(),
                 end: null,
             });
@@ -33,8 +32,7 @@ class SiestModeController {
     }
     public async offMode(req: Request, res: Response) { 
         try {
-            const { account, user } = req.body;
-            const thisSleepMode = await SiestModeRecord.findOne({ accountId: account, end: null });
+            const thisSleepMode = await SiestModeRecord.findOne({ accountId: Constants.ACCOUNT_ID, end: null });
             if (thisSleepMode) {
                 await SiestModeRecord.updateOne({ _id: thisSleepMode._id }, { $set: { end: new Date() } });
                 await siestModeHelper.offMode();
