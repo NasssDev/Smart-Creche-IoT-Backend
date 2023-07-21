@@ -9,16 +9,22 @@ import { Constants } from "../../utils/constants";
 class SiestModeController {
     public async onMode(req: Request, res: Response) { 
         try {
-            await siestModeHelper.onMode();
-            const sleepmode = new SiestModeRecord({
-                accountId: Constants.ACCOUNT_ID,
-                start: new Date(),
-                end: null,
-            });
-            await sleepmode.save();
-            console.log("ENDED")
-            Helper.createResponse(res, HttpStatus.OK, 'SLEEP_MODE_ON',{});
-          return;
+            const check = await SiestModeRecord.find({ accountId: Constants.ACCOUNT_ID, end: null });
+            if (check.length == 0) {
+                await siestModeHelper.onMode();
+                const sleepmode = new SiestModeRecord({
+                    accountId: Constants.ACCOUNT_ID,
+                    start: new Date(),
+                    end: null,
+                });
+                await sleepmode.save();
+                console.log("ENDED")
+                Helper.createResponse(res, HttpStatus.OK, 'SLEEP_MODE_ON', {});
+                return;
+            } else {
+                Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'ALREADY_ON', {});
+                return;
+            }
         } catch (err) {
             logger.error(__filename, {
                 method: 'runDataFetch',
