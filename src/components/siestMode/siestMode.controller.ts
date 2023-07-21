@@ -5,6 +5,7 @@ import siestModeHelper from "./siestMode.helper";
 import { Request, Response } from 'express';
 import { SiestModeRecord } from "./siestMode.model";
 import { SensorValueRecord } from "../sensor/model/sensorValue.model";
+import { Constants } from "../../utils/constants";
 class SiestModeController {
     public async onMode(req: Request, res: Response) { 
         try {
@@ -55,7 +56,7 @@ class SiestModeController {
     public async getInfo(req: Request, res: Response) { 
         try {
             const { account, user } = req.body;
-            const sensorID = [112, 131, 119];
+            const sensorID = [Constants.SENSORS.TEMPERATURE, Constants.SENSORS.CO2, Constants.SENSORS.SOUND];
             const location = ["63c09edc-771b-4e15-ab00-237bb926b040"];
             let sensorsvalue = [];
             const thisSleepMode = await SiestModeRecord.findOne({ accountId: "64b82716c3836bc749487d3b" });
