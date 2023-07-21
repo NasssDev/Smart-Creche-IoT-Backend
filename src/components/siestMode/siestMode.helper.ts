@@ -14,7 +14,7 @@ class SiesteModeHelper {
                     "cmd_id": 104,
                     "destination_address": "e9f670bb-9b7e-412a-beaf-376f029b3445",
                     "ack_flags": 0,
-                    "cmd_type": 207
+                    "cmd_type": 208
                 };
                 client.publish(topic, JSON.stringify(message));
             resolve(true);
@@ -38,7 +38,7 @@ class SiesteModeHelper {
                     "cmd_id": 104,
                     "destination_address": "e9f670bb-9b7e-412a-beaf-376f029b3445",
                     "ack_flags": 0,
-                    "cmd_type": 208
+                    "cmd_type": 207
                 };
                 client.publish(topic, JSON.stringify(message));
                 resolve(true);
