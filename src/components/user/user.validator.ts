@@ -42,7 +42,7 @@ class UserValidator {
          req.body.siret = data
          
     } catch (error) {
-        errors['siret'] = 'SIRET_ERROR';
+        errors['siret'] = error.message;
     }
 
     //check firstName
