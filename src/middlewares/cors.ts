@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 class CORS {
-const allowedOrigin = [
+private allowedOrigin = [
          'http://localhost:5173',
          'http://localhost:5174'
       ];
