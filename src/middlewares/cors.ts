@@ -8,7 +8,7 @@ private allowedOrigin = [
 
    init(app: express.Application) {
       app.use(cors({
-         origin: allowedOrigin,
+         origin: this.allowedOrigin,
          method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
          credential:  true,
          exposedHeaders: ["*"]
