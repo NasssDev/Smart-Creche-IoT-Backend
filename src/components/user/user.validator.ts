@@ -27,7 +27,7 @@ class UserValidator {
         if(!isEmpty(isExist)){
             errors['siret'] = 'SIRET_ALREADY_EXIST';
         }  
-        /*const siretCheck = await axios({
+        const siretCheck = await axios({
             url: `https://api.insee.fr/entreprises/sirene/V3/siret/${siret}`,
             method: 'get',
             headers: { Authorization: `Bearer ${process.env.INSEE_TOKEN}` }
@@ -39,7 +39,7 @@ class UserValidator {
          }else if(data?.etablissement?.uniteLegale?.activitePrincipaleUniteLegale != "88.91A"){
             errors['siret'] = 'WRONG_SIRET';
          }
-         req.body.siret = data*/
+         req.body.siret = data
          
     } catch (error) {
         errors['siret'] = 'SIRET_ERROR';
