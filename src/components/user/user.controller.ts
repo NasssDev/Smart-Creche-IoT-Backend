@@ -132,41 +132,40 @@ class UserController {
     * @returns {object} 500 - Internal server error
     */
    public async signin(req: Request, res: Response) {
-    const { password, user } = req.body;
-
-    try {
-        const [userRole, account, isPwdMatching] = await Promise.all([
-            UserRoleRecord.findOne({ userId: user._id, defaultLoginAccount: true, isDeleted: false }).lean(),
-            AccountRecord.findOne({ _id: userRole.accountId, isDeleted: false }).lean(),
-            bcrypt.compare(password, user.password)
-        ]);
-
-        if (isPwdMatching && !user.resetPassword) {
-            const session = await SessionRecord.create({
-                userId: user._id,
-                accountId: account._id
+      const { password, user } = req.body;
+      try {   
+         const userRole = await UserRoleRecord.findOne({userId: user._id, defaultLoginAccount: true, isDeleted: false}).lean()
+         const account = await AccountRecord.findOne({_id: userRole.accountId, isDeleted: false}).lean()
+         const isPwdMatching = await bcrypt.compare(password, user.password);           
+              
+         if (isPwdMatching && !user.resetPassword) {  
+           const session = await SessionRecord.create({
+               userId: user._id,
+               accountId: account._id
             });
-
-            const tokenData = Common.createToken({ user, userRole, session });
-            res.setHeader('Set-Cookie', [Helper.createCookie(tokenData)]);
+            const tokenData = Common.createToken({ user, userRole, session: session });    
+            res.setHeader('Set-Cookie', [Helper.createCookie(tokenData)]);          
             Helper.createResponse(res, HttpStatus.OK, 'SIGNIN_SUCCESS', {
-                user,
-                token: tokenData?.token,
-                account
+               user,
+               token: tokenData?.token,
+               account
             });
-        } else {
-            Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'EMAIL_AND_PASSWORD_DOESENT_MATCH', {});
-        }
-    } catch (error) {
-        logger.error(__filename, {
+            return 
+         }
+         Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'EMAIL_AND_PASSWORD_DOESENT_MATCH', {});
+         return;
+      } catch (error) {
+         logger.error(__filename, {
             method: 'signin',
             requestId: req['uuid'],
             custom_message: 'Error while finalize signin',
             error
-        });
-        Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'SIGNIN_ERROR', {});
-    }
-}
+         });
+         Helper.createResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'SIGNIN_ERROR', {});
+         return;
+      }
+   }
+
 
 
    /**
